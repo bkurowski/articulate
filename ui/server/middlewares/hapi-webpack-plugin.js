@@ -73,8 +73,7 @@ function register(server, options) {
   });
 
   const onPreResponse = async (request, h) => {
-
-    if (request.response.statusCode === 200) {
+    if (!request.response.isBoom) {
       return h.continue;
     }
     const filename = Path.join(compiler.outputPath, 'index.html');

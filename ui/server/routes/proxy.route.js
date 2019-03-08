@@ -17,7 +17,6 @@ export default [
     config: {
       handler,
       payload: {
-        output: 'stream',
         parse: false,
       },
     },
@@ -27,7 +26,6 @@ export default [
     config: {
       handler,
       payload: {
-        output: 'stream',
         parse: false,
       },
     },
