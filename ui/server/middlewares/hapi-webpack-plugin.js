@@ -1,12 +1,11 @@
 /**
  * Import dependencies https://github.com/SimonDegraeve/hapi-webpack-plugin
  */
-require('babel-polyfill');
-const Path = require('path');
-const Webpack = require('webpack');
-const WebpackDevMiddleware = require('webpack-dev-middleware');
-const WebpackHotMiddleware = require('webpack-hot-middleware');
-const Pack = require('../../package.json');
+import Path from 'path';
+import Webpack from 'webpack';
+import WebpackDevMiddleware from 'webpack-dev-middleware';
+import WebpackHotMiddleware from 'webpack-hot-middleware';
+import Pack from '../../package.json';
 
 function register(server, options) {
 
@@ -73,12 +72,21 @@ function register(server, options) {
     },
   });
 
-  const onPreResponse = async function() {
+  const onPreResponse = async (request, h) => {
 
+    if (request.response.statusCode === 200) {
+      return h.continue;
+    }
     const filename = Path.join(compiler.outputPath, 'index.html');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
+
       compiler.outputFileSystem.readFile(filename, (fileReadErr, result) => {
-        fileReadErr ? reject(fileReadErr) : resolve(result.toString('utf8'));
+        if (fileReadErr) {
+          reject(fileReadErr);
+        }
+        else {
+          resolve(result.toString('utf8'));
+        }
       });
     });
   };
